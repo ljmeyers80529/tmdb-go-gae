@@ -1,2 +1,3 @@
 # tmdb_go_gae
-TMDb API interface for google app engine
+
+Based on code by ryanbradynd05, modified to be used with the google app engine.
