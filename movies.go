@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // Movie struct
@@ -358,67 +359,67 @@ type MovieVideos struct {
 
 // GetMovieInfo for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieid/get
-func (tmdb *TMDb) GetMovieInfo(id int, options map[string]string) (*Movie, error) {
+func (tmdb *TMDb) GetMovieInfo(ctx context.Context, id int, options map[string]string) (*Movie, error) {
 	var availableOptions = map[string]struct{}{
 		"language":           {},
 		"append_to_response": {}}
 	var movie Movie
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &movie)
+	result, err := getTmdb(ctx, uri, &movie)
 	return result.(*Movie), err
 }
 
 // GetMovieAccountStates gets the status of whether or not the movie has been rated or added to their favourite or movie watch list
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidaccountstates/get
-func (tmdb *TMDb) GetMovieAccountStates(id int, sessionID string) (*MovieAccountState, error) {
+func (tmdb *TMDb) GetMovieAccountStates(ctx context.Context, id int, sessionID string) (*MovieAccountState, error) {
 	var state MovieAccountState
 	uri := fmt.Sprintf("%s/movie/%v/account_states?api_key=%s&session_id=%s", baseURL, id, tmdb.apiKey, sessionID)
-	result, err := getTmdb(uri, &state)
+	result, err := getTmdb(ctx, uri, &state)
 	return result.(*MovieAccountState), err
 }
 
 // GetMovieAlternativeTitles for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidalternativetitles/get
-func (tmdb *TMDb) GetMovieAlternativeTitles(id int, options map[string]string) (*MovieAlternativeTitles, error) {
+func (tmdb *TMDb) GetMovieAlternativeTitles(ctx context.Context, id int, options map[string]string) (*MovieAlternativeTitles, error) {
 	var availableOptions = map[string]struct{}{
 		"country":            {},
 		"append_to_response": {}}
 	var titles MovieAlternativeTitles
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/alternative_titles?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &titles)
+	result, err := getTmdb(ctx, uri, &titles)
 	return result.(*MovieAlternativeTitles), err
 }
 
 // GetMovieChanges for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidchanges/get
-func (tmdb *TMDb) GetMovieChanges(id int, options map[string]string) (*MovieChanges, error) {
+func (tmdb *TMDb) GetMovieChanges(ctx context.Context, id int, options map[string]string) (*MovieChanges, error) {
 	var availableOptions = map[string]struct{}{
 		"start_date": {},
 		"end_date":   {}}
 	var changes MovieChanges
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/changes?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &changes)
+	result, err := getTmdb(ctx, uri, &changes)
 	return result.(*MovieChanges), err
 }
 
 // GetMovieCredits for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidcredits/get
-func (tmdb *TMDb) GetMovieCredits(id int, options map[string]string) (*MovieCredits, error) {
+func (tmdb *TMDb) GetMovieCredits(ctx context.Context, id int, options map[string]string) (*MovieCredits, error) {
 	var availableOptions = map[string]struct{}{
 		"append_to_response": {}}
 	var credits MovieCredits
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/credits?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &credits)
+	result, err := getTmdb(ctx, uri, &credits)
 	return result.(*MovieCredits), err
 }
 
 // GetMovieImages for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidimages/get
-func (tmdb *TMDb) GetMovieImages(id int, options map[string]string) (*MovieImages, error) {
+func (tmdb *TMDb) GetMovieImages(ctx context.Context, id int, options map[string]string) (*MovieImages, error) {
 	var availableOptions = map[string]struct{}{
 		"language":               {},
 		"append_to_response":     {},
@@ -426,34 +427,34 @@ func (tmdb *TMDb) GetMovieImages(id int, options map[string]string) (*MovieImage
 	var images MovieImages
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/images?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &images)
+	result, err := getTmdb(ctx, uri, &images)
 	return result.(*MovieImages), err
 }
 
 // GetMovieKeywords for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidkeywords/get
-func (tmdb *TMDb) GetMovieKeywords(id int, options map[string]string) (*MovieKeywords, error) {
+func (tmdb *TMDb) GetMovieKeywords(ctx context.Context, id int, options map[string]string) (*MovieKeywords, error) {
 	var availableOptions = map[string]struct{}{
 		"append_to_response": {}}
 	var keywords MovieKeywords
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/keywords?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &keywords)
+	result, err := getTmdb(ctx, uri, &keywords)
 	return result.(*MovieKeywords), err
 }
 
 // GetMovieLatest gets the latest movie
 // http://docs.themoviedb.apiary.io/#reference/movies/movielatest/get
-func (tmdb *TMDb) GetMovieLatest() (*Movie, error) {
+func (tmdb *TMDb) GetMovieLatest(ctx context.Context) (*Movie, error) {
 	var movie Movie
 	uri := fmt.Sprintf("%s/movie/latest?api_key=%s", baseURL, tmdb.apiKey)
-	result, err := getTmdb(uri, &movie)
+	result, err := getTmdb(ctx, uri, &movie)
 	return result.(*Movie), err
 }
 
 // GetMovieLists that the movie belongs to
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidlists/get
-func (tmdb *TMDb) GetMovieLists(id int, options map[string]string) (*MovieLists, error) {
+func (tmdb *TMDb) GetMovieLists(ctx context.Context, id int, options map[string]string) (*MovieLists, error) {
 	var availableOptions = map[string]struct{}{
 		"page":               {},
 		"language":           {},
@@ -461,51 +462,51 @@ func (tmdb *TMDb) GetMovieLists(id int, options map[string]string) (*MovieLists,
 	var lists MovieLists
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/lists?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &lists)
+	result, err := getTmdb(ctx, uri, &lists)
 	return result.(*MovieLists), err
 }
 
 // GetMovieNowPlaying that have been, or are being released this week
 // http://docs.themoviedb.apiary.io/#reference/movies/movienowplaying/get
-func (tmdb *TMDb) GetMovieNowPlaying(options map[string]string) (*MovieDatedResults, error) {
+func (tmdb *TMDb) GetMovieNowPlaying(ctx context.Context, options map[string]string) (*MovieDatedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {}}
 	var nowPlaying MovieDatedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/now_playing?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &nowPlaying)
+	result, err := getTmdb(ctx, uri, &nowPlaying)
 	return result.(*MovieDatedResults), err
 }
 
 // GetMoviePopular gets the list of popular movies on The Movie Database
 // http://docs.themoviedb.apiary.io/#reference/movies/moviepopular/get
-func (tmdb *TMDb) GetMoviePopular(options map[string]string) (*MoviePagedResults, error) {
+func (tmdb *TMDb) GetMoviePopular(ctx context.Context, options map[string]string) (*MoviePagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {}}
 	var popular MoviePagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/popular?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &popular)
+	result, err := getTmdb(ctx, uri, &popular)
 	return result.(*MoviePagedResults), err
 }
 
 // GetMovieReleases for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidreleases/get
-func (tmdb *TMDb) GetMovieReleases(id int, options map[string]string) (*MovieReleases, error) {
+func (tmdb *TMDb) GetMovieReleases(ctx context.Context, id int, options map[string]string) (*MovieReleases, error) {
 	var availableOptions = map[string]struct{}{
 		"append_to_response": {}}
 	var releases MovieReleases
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/releases?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &releases)
+	result, err := getTmdb(ctx, uri, &releases)
 	return result.(*MovieReleases), err
 }
 
 // GetMovieReviews for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidreviews/get
-func (tmdb *TMDb) GetMovieReviews(id int, options map[string]string) (*MovieReviews, error) {
+func (tmdb *TMDb) GetMovieReviews(ctx context.Context, id int, options map[string]string) (*MovieReviews, error) {
 	var availableOptions = map[string]struct{}{
 		"page":               {},
 		"language":           {},
@@ -513,13 +514,13 @@ func (tmdb *TMDb) GetMovieReviews(id int, options map[string]string) (*MovieRevi
 	var reviews MovieReviews
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/reviews?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &reviews)
+	result, err := getTmdb(ctx, uri, &reviews)
 	return result.(*MovieReviews), err
 }
 
 // GetMovieSimilar for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidsimilar/get
-func (tmdb *TMDb) GetMovieSimilar(id int, options map[string]string) (*MoviePagedResults, error) {
+func (tmdb *TMDb) GetMovieSimilar(ctx context.Context, id int, options map[string]string) (*MoviePagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":               {},
 		"language":           {},
@@ -527,58 +528,58 @@ func (tmdb *TMDb) GetMovieSimilar(id int, options map[string]string) (*MoviePage
 	var similar MoviePagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/similar?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &similar)
+	result, err := getTmdb(ctx, uri, &similar)
 	return result.(*MoviePagedResults), err
 }
 
 // GetMovieTopRated gets the list of top rated movies
 // http://docs.themoviedb.apiary.io/#reference/movies/movietoprated/get
-func (tmdb *TMDb) GetMovieTopRated(options map[string]string) (*MoviePagedResults, error) {
+func (tmdb *TMDb) GetMovieTopRated(ctx context.Context, options map[string]string) (*MoviePagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {}}
 	var topRated MoviePagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/top_rated?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &topRated)
+	result, err := getTmdb(ctx, uri, &topRated)
 	return result.(*MoviePagedResults), err
 }
 
 // GetMovieTranslations for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidtranslations/get
-func (tmdb *TMDb) GetMovieTranslations(id int, options map[string]string) (*MovieTranslations, error) {
+func (tmdb *TMDb) GetMovieTranslations(ctx context.Context, id int, options map[string]string) (*MovieTranslations, error) {
 	var availableOptions = map[string]struct{}{
 		"append_to_response": {}}
 	var translations MovieTranslations
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/translations?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &translations)
+	result, err := getTmdb(ctx, uri, &translations)
 	return result.(*MovieTranslations), err
 }
 
 // GetMovieVideos for a specific movie id
 // http://docs.themoviedb.apiary.io/#reference/movies/movieidvideos/get
-func (tmdb *TMDb) GetMovieVideos(id int, options map[string]string) (*MovieVideos, error) {
+func (tmdb *TMDb) GetMovieVideos(ctx context.Context, id int, options map[string]string) (*MovieVideos, error) {
 	var availableOptions = map[string]struct{}{
 		"language":           {},
 		"append_to_response": {}}
 	var videos MovieVideos
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/%v/videos?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &videos)
+	result, err := getTmdb(ctx, uri, &videos)
 	return result.(*MovieVideos), err
 }
 
 // GetMovieUpcoming by release date
 // http://docs.themoviedb.apiary.io/#reference/movies/movieupcoming/get
-func (tmdb *TMDb) GetMovieUpcoming(options map[string]string) (*MovieDatedResults, error) {
+func (tmdb *TMDb) GetMovieUpcoming(ctx context.Context, options map[string]string) (*MovieDatedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {}}
 	var upcoming MovieDatedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/movie/upcoming?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &upcoming)
+	result, err := getTmdb(ctx, uri, &upcoming)
 	return result.(*MovieDatedResults), err
 }
 

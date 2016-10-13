@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // Configuration struct
@@ -20,9 +21,9 @@ type Configuration struct {
 
 // GetConfiguration gets the system wide configuration information
 // http://docs.themoviedb.apiary.io/#reference/configuration/configuration/get
-func (tmdb *TMDb) GetConfiguration() (*Configuration, error) {
+func (tmdb *TMDb) GetConfiguration(ctx context.Context) (*Configuration, error) {
 	var config Configuration
 	uri := fmt.Sprintf("%s/configuration?api_key=%s", baseURL, tmdb.apiKey)
-	result, err := getTmdb(uri, &config)
+	result, err := getTmdb(ctx, uri, &config)
 	return result.(*Configuration), err
 }

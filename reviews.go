@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // Review struct
@@ -18,9 +19,9 @@ type Review struct {
 
 // GetReviewInfo gets the full details of a review by ID
 // http://docs.themoviedb.apiary.io/#reference/reviews/reviewid/get
-func (tmdb *TMDb) GetReviewInfo(id string) (*Review, error) {
+func (tmdb *TMDb) GetReviewInfo(ctx context.Context, id string) (*Review, error) {
 	var reviewInfo Review
 	uri := fmt.Sprintf("%s/review/%v?api_key=%s", baseURL, id, tmdb.apiKey)
-	result, err := getTmdb(uri, &reviewInfo)
+	result, err := getTmdb(ctx, uri, &reviewInfo)
 	return result.(*Review), err
 }

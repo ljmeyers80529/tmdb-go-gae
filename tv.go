@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // TV struct
@@ -215,29 +216,29 @@ type TvVideos struct {
 
 // GetTvInfo gets the primary information about a TV series by id
 // http://docs.themoviedb.apiary.io/#reference/tv/tvid/get
-func (tmdb *TMDb) GetTvInfo(id int, options map[string]string) (*TV, error) {
+func (tmdb *TMDb) GetTvInfo(ctx context.Context, id int, options map[string]string) (*TV, error) {
 	var availableOptions = map[string]struct{}{
 		"language":           {},
 		"append_to_response": {}}
 	var tvInfo TV
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &tvInfo)
+	result, err := getTmdb(ctx, uri, &tvInfo)
 	return result.(*TV), err
 }
 
 // GetTvAccountStates gets the status of whether or not the TV show has been rated or added to their favourite or watch lists
 // http://docs.themoviedb.apiary.io/#reference/tv/tvidaccountstates/get
-func (tmdb *TMDb) GetTvAccountStates(id int, sessionID string) (*TvAccountState, error) {
+func (tmdb *TMDb) GetTvAccountStates(ctx context.Context, id int, sessionID string) (*TvAccountState, error) {
 	var state TvAccountState
 	uri := fmt.Sprintf("%s/tv/%v/account_states?api_key=%s&session_id=%s", baseURL, id, tmdb.apiKey, sessionID)
-	result, err := getTmdb(uri, &state)
+	result, err := getTmdb(ctx, uri, &state)
 	return result.(*TvAccountState), err
 }
 
 // GetTvAiringToday gets the list of TV shows that air today
 // http://docs.themoviedb.apiary.io/#reference/tv/tvairingtoday/get
-func (tmdb *TMDb) GetTvAiringToday(options map[string]string) (*TvPagedResults, error) {
+func (tmdb *TMDb) GetTvAiringToday(ctx context.Context, options map[string]string) (*TvPagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {},
@@ -245,108 +246,108 @@ func (tmdb *TMDb) GetTvAiringToday(options map[string]string) (*TvPagedResults, 
 	var onAir TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/airing_today?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &onAir)
+	result, err := getTmdb(ctx, uri, &onAir)
 	return result.(*TvPagedResults), err
 }
 
 // GetTvAlternativeTitles gets the alternative titles for a specific show id
 // http://docs.themoviedb.apiary.io/#reference/tv/tvidalternativetitles/get
-func (tmdb *TMDb) GetTvAlternativeTitles(id int) (*TvAlternativeTitles, error) {
+func (tmdb *TMDb) GetTvAlternativeTitles(ctx context.Context, id int) (*TvAlternativeTitles, error) {
 	var titles TvAlternativeTitles
 	uri := fmt.Sprintf("%s/tv/%v/alternative_titles?api_key=%s", baseURL, id, tmdb.apiKey)
-	result, err := getTmdb(uri, &titles)
+	result, err := getTmdb(ctx, uri, &titles)
 	return result.(*TvAlternativeTitles), err
 }
 
 // GetTvChanges gets the changes for a specific show id
 // http://docs.themoviedb.apiary.io/#reference/tv/tvidchanges/get
-func (tmdb *TMDb) GetTvChanges(id int, options map[string]string) (*TvChanges, error) {
+func (tmdb *TMDb) GetTvChanges(ctx context.Context, id int, options map[string]string) (*TvChanges, error) {
 	var availableOptions = map[string]struct{}{
 		"start_date": {},
 		"end_date":   {}}
 	var changes TvChanges
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/changes?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &changes)
+	result, err := getTmdb(ctx, uri, &changes)
 	return result.(*TvChanges), err
 }
 
 // GetTvCredits gets the credits for a specific TV show id
 // http://docs.themoviedb.apiary.io/#reference/tv/tvidcredits/get
-func (tmdb *TMDb) GetTvCredits(id int, options map[string]string) (*TvCredits, error) {
+func (tmdb *TMDb) GetTvCredits(ctx context.Context, id int, options map[string]string) (*TvCredits, error) {
 	var availableOptions = map[string]struct{}{
 		"language":           {},
 		"append_to_response": {}}
 	var credits TvCredits
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/credits?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &credits)
+	result, err := getTmdb(ctx, uri, &credits)
 	return result.(*TvCredits), err
 }
 
 // GetTvImages gets the images for a TV series
 // http://docs.themoviedb.apiary.io/#reference/tv/tvidimages/get
-func (tmdb *TMDb) GetTvImages(id int, options map[string]string) (*TvImages, error) {
+func (tmdb *TMDb) GetTvImages(ctx context.Context, id int, options map[string]string) (*TvImages, error) {
 	var availableOptions = map[string]struct{}{
 		"language":               {},
 		"include_image_language": {}}
 	var images TvImages
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/images?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &images)
+	result, err := getTmdb(ctx, uri, &images)
 	return result.(*TvImages), err
 }
 
 // GetTvKeywords gets the keywords for a specific TV show id
 // http://docs.themoviedb.apiary.io/#reference/tv/tvidkeywords/get
-func (tmdb *TMDb) GetTvKeywords(id int, options map[string]string) (*TvKeywords, error) {
+func (tmdb *TMDb) GetTvKeywords(ctx context.Context, id int, options map[string]string) (*TvKeywords, error) {
 	var availableOptions = map[string]struct{}{
 		"append_to_response": {}}
 	var keywords TvKeywords
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/keywords?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &keywords)
+	result, err := getTmdb(ctx, uri, &keywords)
 	return result.(*TvKeywords), err
 }
 
 // GetTvLatest gets the latest TV show
 // http://docs.themoviedb.apiary.io/#reference/tv/tvlatest/get
-func (tmdb *TMDb) GetTvLatest() (*TV, error) {
+func (tmdb *TMDb) GetTvLatest(ctx context.Context) (*TV, error) {
 	var tv TV
 	uri := fmt.Sprintf("%s/tv/latest?api_key=%s", baseURL, tmdb.apiKey)
-	result, err := getTmdb(uri, &tv)
+	result, err := getTmdb(ctx, uri, &tv)
 	return result.(*TV), err
 }
 
 // GetTvOnTheAir gets the list of TV shows that are currently on the air
 // http://docs.themoviedb.apiary.io/#reference/tv/tvontheair/get
-func (tmdb *TMDb) GetTvOnTheAir(options map[string]string) (*TvPagedResults, error) {
+func (tmdb *TMDb) GetTvOnTheAir(ctx context.Context, options map[string]string) (*TvPagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {}}
 	var onAir TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/on_the_air?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &onAir)
+	result, err := getTmdb(ctx, uri, &onAir)
 	return result.(*TvPagedResults), err
 }
 
 // GetTvPopular gets the list of popular TV shows
 // http://docs.themoviedb.apiary.io/#reference/tv/tvpopular/get
-func (tmdb *TMDb) GetTvPopular(options map[string]string) (*TvPagedResults, error) {
+func (tmdb *TMDb) GetTvPopular(ctx context.Context, options map[string]string) (*TvPagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {}}
 	var onAir TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/popular?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &onAir)
+	result, err := getTmdb(ctx, uri, &onAir)
 	return result.(*TvPagedResults), err
 }
 
 // GetTvSimilar gets the similar TV shows for a specific tv show id
 // http://docs.themoviedb.apiary.io/#reference/tv/tvidsimilar/get
-func (tmdb *TMDb) GetTvSimilar(id int, options map[string]string) (*TvPagedResults, error) {
+func (tmdb *TMDb) GetTvSimilar(ctx context.Context, id int, options map[string]string) (*TvPagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":               {},
 		"language":           {},
@@ -354,40 +355,40 @@ func (tmdb *TMDb) GetTvSimilar(id int, options map[string]string) (*TvPagedResul
 	var similar TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/similar?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &similar)
+	result, err := getTmdb(ctx, uri, &similar)
 	return result.(*TvPagedResults), err
 }
 
 // GetTvTopRated gets the list of top rated TV shows
 // http://docs.themoviedb.apiary.io/#reference/tv/tvtoprated/get
-func (tmdb *TMDb) GetTvTopRated(options map[string]string) (*TvPagedResults, error) {
+func (tmdb *TMDb) GetTvTopRated(ctx context.Context, options map[string]string) (*TvPagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {}}
 	var onAir TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/top_rated?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &onAir)
+	result, err := getTmdb(ctx, uri, &onAir)
 	return result.(*TvPagedResults), err
 }
 
 // GetTvTranslations gets the list of translations that exist for a TV series
 // http://docs.themoviedb.apiary.io/#reference/tv/tvidtranslations/get
-func (tmdb *TMDb) GetTvTranslations(id int) (*TvTranslations, error) {
+func (tmdb *TMDb) GetTvTranslations(ctx context.Context, id int) (*TvTranslations, error) {
 	var translations TvTranslations
 	uri := fmt.Sprintf("%s/tv/%v/translations?api_key=%s", baseURL, id, tmdb.apiKey)
-	result, err := getTmdb(uri, &translations)
+	result, err := getTmdb(ctx, uri, &translations)
 	return result.(*TvTranslations), err
 }
 
 // GetTvVideos gets the videos that have been added to a TV series
 // http://docs.themoviedb.apiary.io/#reference/tv/tvidvideos/get
-func (tmdb *TMDb) GetTvVideos(id int, options map[string]string) (*TvVideos, error) {
+func (tmdb *TMDb) GetTvVideos(ctx context.Context, id int, options map[string]string) (*TvVideos, error) {
 	var availableOptions = map[string]struct{}{
 		"language": {}}
 	var videos TvVideos
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/videos?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &videos)
+	result, err := getTmdb(ctx, uri, &videos)
 	return result.(*TvVideos), err
 }

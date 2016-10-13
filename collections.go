@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // Collection struct
@@ -40,20 +41,20 @@ type CollectionImages struct {
 
 // GetCollectionInfo gets the basic collection information for a specific collection id
 // http://docs.themoviedb.apiary.io/#reference/collections/collectionid/get
-func (tmdb *TMDb) GetCollectionInfo(id int, options map[string]string) (*Collection, error) {
+func (tmdb *TMDb) GetCollectionInfo(ctx context.Context, id int, options map[string]string) (*Collection, error) {
 	var availableOptions = map[string]struct{}{
 		"language":           {},
 		"append_to_response": {}}
 	var collection Collection
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/collection/%v?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &collection)
+	result, err := getTmdb(ctx, uri, &collection)
 	return result.(*Collection), err
 }
 
 // GetCollectionImages gets a list of people ids that have been edited
 // http://docs.themoviedb.apiary.io/#reference/collections/collectionidimages/get
-func (tmdb *TMDb) GetCollectionImages(id int, options map[string]string) (*CollectionImages, error) {
+func (tmdb *TMDb) GetCollectionImages(ctx context.Context, id int, options map[string]string) (*CollectionImages, error) {
 	var availableOptions = map[string]struct{}{
 		"language":               {},
 		"append_to_response":     {},
@@ -61,6 +62,6 @@ func (tmdb *TMDb) GetCollectionImages(id int, options map[string]string) (*Colle
 	var images CollectionImages
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/collection/%v/images?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &images)
+	result, err := getTmdb(ctx, uri, &images)
 	return result.(*CollectionImages), err
 }

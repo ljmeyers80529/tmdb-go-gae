@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // AccountInfo struct
@@ -16,29 +17,29 @@ type AccountInfo struct {
 
 // GetAccountInfo gets the basic information for an account
 // http://docs.themoviedb.apiary.io/#reference/account/account/get
-func (tmdb *TMDb) GetAccountInfo(sessionID string) (*AccountInfo, error) {
+func (tmdb *TMDb) GetAccountInfo(ctx context.Context, sessionID string) (*AccountInfo, error) {
 	var account AccountInfo
 	uri := fmt.Sprintf("%s/account?api_key=%s&session_id=%s", baseURL, tmdb.apiKey, sessionID)
-	result, err := getTmdb(uri, &account)
+	result, err := getTmdb(ctx, uri, &account)
 	return result.(*AccountInfo), err
 }
 
 // GetAccountLists gets the lists that you have created and marked as a favorite
 // http://docs.themoviedb.apiary.io/#reference/account/accountidlists/get
-func (tmdb *TMDb) GetAccountLists(id int, sessionID string, options map[string]string) (*MovieLists, error) {
+func (tmdb *TMDb) GetAccountLists(ctx context.Context, id int, sessionID string, options map[string]string) (*MovieLists, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {}}
 	var lists MovieLists
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/account/%v/lists?api_key=%s&session_id=%s%s", baseURL, id, tmdb.apiKey, sessionID, optionsString)
-	result, err := getTmdb(uri, &lists)
+	result, err := getTmdb(ctx, uri, &lists)
 	return result.(*MovieLists), err
 }
 
 // GetAccountFavoriteMovies gets the list of favorite movies for an account
 // http://docs.themoviedb.apiary.io/#reference/account/accountidfavoritemovies/get
-func (tmdb *TMDb) GetAccountFavoriteMovies(id int, sessionID string, options map[string]string) (*MoviePagedResults, error) {
+func (tmdb *TMDb) GetAccountFavoriteMovies(ctx context.Context, id int, sessionID string, options map[string]string) (*MoviePagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"sort_by":  {},
@@ -46,13 +47,13 @@ func (tmdb *TMDb) GetAccountFavoriteMovies(id int, sessionID string, options map
 	var favorites MoviePagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/account/%v/favorite/movies?api_key=%s&session_id=%s%s", baseURL, id, tmdb.apiKey, sessionID, optionsString)
-	result, err := getTmdb(uri, &favorites)
+	result, err := getTmdb(ctx, uri, &favorites)
 	return result.(*MoviePagedResults), err
 }
 
 // GetAccountFavoriteTv gets the list of favorite movies for an account
 // http://docs.themoviedb.apiary.io/#reference/account/accountidfavoritetv/get
-func (tmdb *TMDb) GetAccountFavoriteTv(id int, sessionID string, options map[string]string) (*TvPagedResults, error) {
+func (tmdb *TMDb) GetAccountFavoriteTv(ctx context.Context, id int, sessionID string, options map[string]string) (*TvPagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"sort_by":  {},
@@ -60,13 +61,13 @@ func (tmdb *TMDb) GetAccountFavoriteTv(id int, sessionID string, options map[str
 	var favorites TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/account/%v/favorite/tv?api_key=%s&session_id=%s%s", baseURL, id, tmdb.apiKey, sessionID, optionsString)
-	result, err := getTmdb(uri, &favorites)
+	result, err := getTmdb(ctx, uri, &favorites)
 	return result.(*TvPagedResults), err
 }
 
 // GetAccountRatedMovies gets the list of rated movies (and associated rating) for an account
 // http://docs.themoviedb.apiary.io/#reference/account/accountidratedmovies/get
-func (tmdb *TMDb) GetAccountRatedMovies(id int, sessionID string, options map[string]string) (*MoviePagedResults, error) {
+func (tmdb *TMDb) GetAccountRatedMovies(ctx context.Context, id int, sessionID string, options map[string]string) (*MoviePagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"sort_by":  {},
@@ -74,13 +75,13 @@ func (tmdb *TMDb) GetAccountRatedMovies(id int, sessionID string, options map[st
 	var favorites MoviePagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/account/%v/rated/movies?api_key=%s&session_id=%s%s", baseURL, id, tmdb.apiKey, sessionID, optionsString)
-	result, err := getTmdb(uri, &favorites)
+	result, err := getTmdb(ctx, uri, &favorites)
 	return result.(*MoviePagedResults), err
 }
 
 // GetAccountRatedTv gets the list of rated TV shows (and associated rating) for an account
 // http://docs.themoviedb.apiary.io/#reference/account/accountidratedtv/get
-func (tmdb *TMDb) GetAccountRatedTv(id int, sessionID string, options map[string]string) (*TvPagedResults, error) {
+func (tmdb *TMDb) GetAccountRatedTv(ctx context.Context, id int, sessionID string, options map[string]string) (*TvPagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"sort_by":  {},
@@ -88,13 +89,13 @@ func (tmdb *TMDb) GetAccountRatedTv(id int, sessionID string, options map[string
 	var favorites TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/account/%v/rated/tv?api_key=%s&session_id=%s%s", baseURL, id, tmdb.apiKey, sessionID, optionsString)
-	result, err := getTmdb(uri, &favorites)
+	result, err := getTmdb(ctx, uri, &favorites)
 	return result.(*TvPagedResults), err
 }
 
 // GetAccountWatchlistMovies gets the list of movies on an accounts watchlist
 // http://docs.themoviedb.apiary.io/#reference/account/accountidwatchlistmovies/get
-func (tmdb *TMDb) GetAccountWatchlistMovies(id int, sessionID string, options map[string]string) (*MoviePagedResults, error) {
+func (tmdb *TMDb) GetAccountWatchlistMovies(ctx context.Context, id int, sessionID string, options map[string]string) (*MoviePagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"sort_by":  {},
@@ -102,13 +103,13 @@ func (tmdb *TMDb) GetAccountWatchlistMovies(id int, sessionID string, options ma
 	var favorites MoviePagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/account/%v/watchlist/movies?api_key=%s&session_id=%s%s", baseURL, id, tmdb.apiKey, sessionID, optionsString)
-	result, err := getTmdb(uri, &favorites)
+	result, err := getTmdb(ctx, uri, &favorites)
 	return result.(*MoviePagedResults), err
 }
 
 // GetAccountWatchlistTv gets the list of TV series on an accounts watchlist
 // http://docs.themoviedb.apiary.io/#reference/account/accountidwatchlisttv/get
-func (tmdb *TMDb) GetAccountWatchlistTv(id int, sessionID string, options map[string]string) (*TvPagedResults, error) {
+func (tmdb *TMDb) GetAccountWatchlistTv(ctx context.Context, id int, sessionID string, options map[string]string) (*TvPagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"sort_by":  {},
@@ -116,6 +117,6 @@ func (tmdb *TMDb) GetAccountWatchlistTv(id int, sessionID string, options map[st
 	var favorites TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/account/%v/watchlist/tv?api_key=%s&session_id=%s%s", baseURL, id, tmdb.apiKey, sessionID, optionsString)
-	result, err := getTmdb(uri, &favorites)
+	result, err := getTmdb(ctx, uri, &favorites)
 	return result.(*TvPagedResults), err
 }

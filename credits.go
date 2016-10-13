@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // Credit struct
@@ -38,12 +39,12 @@ type Credit struct {
 
 // GetCreditInfo gets the detailed information about a particular credit record
 // http://docs.themoviedb.apiary.io/#reference/credits/creditcreditid/get
-func (tmdb *TMDb) GetCreditInfo(id string, options map[string]string) (*Credit, error) {
+func (tmdb *TMDb) GetCreditInfo(ctx context.Context, id string, options map[string]string) (*Credit, error) {
 	var availableOptions = map[string]struct{}{
 		"language": {}}
 	var creditInfo Credit
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/credit/%v?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &creditInfo)
+	result, err := getTmdb(ctx, uri, &creditInfo)
 	return result.(*Credit), err
 }

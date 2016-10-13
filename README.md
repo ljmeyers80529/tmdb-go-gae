@@ -1,4 +1,4 @@
-# tmdb_go_gae
+# tmdb-go-gae
 
 Based on code by ryanbradynd05, modified to be used with the google app engine.
 [GoDoc](https://godoc.org/github.com/ljmeyers80529/tmdb-go-gae)
@@ -15,7 +15,7 @@ Note: This product uses the TMDb API but is not endorsed or certified by TMDb.
 ## How to install
 
 ```shell
-go get github.com/ryanbradynd05/go-tmdb
+go get github.com/ljmeyers80529/tmdb-go-gae
 ```
 
 ## How to use
@@ -47,6 +47,7 @@ To use optional parameters, pass in a map[string]string of options and values:
 ```go
 var options = make(map[string]string)
 options["language"] = "es"
+ctx := appengine.NewContext(req)
 spanishFightClub, err := TMDb.GetMovieInfo(ctx, 550, options)
 ```
 

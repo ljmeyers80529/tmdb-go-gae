@@ -3,6 +3,7 @@ package tmdbgae
 import (
 	"fmt"
 	"net/url"
+	"golang.org/x/net/context"
 )
 
 // CollectionSearchResults struct
@@ -136,7 +137,7 @@ type TvSearchResults struct {
 
 // SearchCollection searches for collections by name
 // http://docs.themoviedb.apiary.io/#reference/search/searchcollection/get
-func (tmdb *TMDb) SearchCollection(name string, options map[string]string) (*CollectionSearchResults, error) {
+func (tmdb *TMDb) SearchCollection(ctx context.Context, name string, options map[string]string) (*CollectionSearchResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":     {},
 		"language": {}}
@@ -144,39 +145,39 @@ func (tmdb *TMDb) SearchCollection(name string, options map[string]string) (*Col
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/collection?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &collections)
+	result, err := getTmdb(ctx, uri, &collections)
 	return result.(*CollectionSearchResults), err
 }
 
 // SearchCompany searches for companies by name
 // http://docs.themoviedb.apiary.io/#reference/search/searchcompany/get
-func (tmdb *TMDb) SearchCompany(name string, options map[string]string) (*CompanySearchResults, error) {
+func (tmdb *TMDb) SearchCompany(ctx context.Context, name string, options map[string]string) (*CompanySearchResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page": {}}
 	var companies CompanySearchResults
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/company?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &companies)
+	result, err := getTmdb(ctx, uri, &companies)
 	return result.(*CompanySearchResults), err
 }
 
 // SearchKeyword searches for keywords by name
 // http://docs.themoviedb.apiary.io/#reference/search/searchkeyword/get
-func (tmdb *TMDb) SearchKeyword(name string, options map[string]string) (*KeywordSearchResults, error) {
+func (tmdb *TMDb) SearchKeyword(ctx context.Context, name string, options map[string]string) (*KeywordSearchResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page": {}}
 	var keywords KeywordSearchResults
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/keyword?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &keywords)
+	result, err := getTmdb(ctx, uri, &keywords)
 	return result.(*KeywordSearchResults), err
 }
 
 // SearchList searches for lists by name and description
 // http://docs.themoviedb.apiary.io/#reference/search/searchlist/get
-func (tmdb *TMDb) SearchList(name string, options map[string]string) (*ListSearchResults, error) {
+func (tmdb *TMDb) SearchList(ctx context.Context, name string, options map[string]string) (*ListSearchResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":          {},
 		"include_adult": {}}
@@ -184,13 +185,13 @@ func (tmdb *TMDb) SearchList(name string, options map[string]string) (*ListSearc
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/list?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &lists)
+	result, err := getTmdb(ctx, uri, &lists)
 	return result.(*ListSearchResults), err
 }
 
 // SearchMovie searches for movies by title
 // http://docs.themoviedb.apiary.io/#reference/search/searchmovie/get
-func (tmdb *TMDb) SearchMovie(name string, options map[string]string) (*MovieSearchResults, error) {
+func (tmdb *TMDb) SearchMovie(ctx context.Context, name string, options map[string]string) (*MovieSearchResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":                 {},
 		"language":             {},
@@ -202,13 +203,13 @@ func (tmdb *TMDb) SearchMovie(name string, options map[string]string) (*MovieSea
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/movie?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &movies)
+	result, err := getTmdb(ctx, uri, &movies)
 	return result.(*MovieSearchResults), err
 }
 
 // SearchMulti searches the movie, tv show and person collections with a single query
 // http://docs.themoviedb.apiary.io/#reference/search/searchmulti/get
-func (tmdb *TMDb) SearchMulti(name string, options map[string]string) (*MultiSearchResults, error) {
+func (tmdb *TMDb) SearchMulti(ctx context.Context, name string, options map[string]string) (*MultiSearchResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":          {},
 		"language":      {},
@@ -217,13 +218,13 @@ func (tmdb *TMDb) SearchMulti(name string, options map[string]string) (*MultiSea
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/multi?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &multis)
+	result, err := getTmdb(ctx, uri, &multis)
 	return result.(*MultiSearchResults), err
 }
 
 // SearchPerson searches for people by name
 // http://docs.themoviedb.apiary.io/#reference/search/searchperson/get
-func (tmdb *TMDb) SearchPerson(name string, options map[string]string) (*PersonSearchResults, error) {
+func (tmdb *TMDb) SearchPerson(ctx context.Context, name string, options map[string]string) (*PersonSearchResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":          {},
 		"search_type":   {},
@@ -232,13 +233,13 @@ func (tmdb *TMDb) SearchPerson(name string, options map[string]string) (*PersonS
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/person?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &people)
+	result, err := getTmdb(ctx, uri, &people)
 	return result.(*PersonSearchResults), err
 }
 
 // SearchTv searches for TV shows by title
 // http://docs.themoviedb.apiary.io/#reference/search/searchtv/get
-func (tmdb *TMDb) SearchTv(name string, options map[string]string) (*TvSearchResults, error) {
+func (tmdb *TMDb) SearchTv(ctx context.Context, name string, options map[string]string) (*TvSearchResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":                {},
 		"language":            {},
@@ -248,6 +249,6 @@ func (tmdb *TMDb) SearchTv(name string, options map[string]string) (*TvSearchRes
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/tv?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &shows)
+	result, err := getTmdb(ctx, uri, &shows)
 	return result.(*TvSearchResults), err
 }

@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // AuthenticationToken struct
@@ -26,36 +27,36 @@ type AuthenticationGuestSession struct {
 
 // GetAuthToken generates a valid request token for user based authentication
 // http://docs.themoviedb.apiary.io/#reference/authentication/authenticationtokennew/get
-func (tmdb *TMDb) GetAuthToken() (*AuthenticationToken, error) {
+func (tmdb *TMDb) GetAuthToken(ctx context.Context) (*AuthenticationToken, error) {
 	var token AuthenticationToken
 	uri := fmt.Sprintf("%s/authentication/token/new?api_key=%s", baseURL, tmdb.apiKey)
-	result, err := getTmdb(uri, &token)
+	result, err := getTmdb(ctx, uri, &token)
 	return result.(*AuthenticationToken), err
 }
 
 // GetAuthValidateToken authenticates a user with a TMDb username and password
 // http://docs.themoviedb.apiary.io/#reference/authentication/authenticationtokenvalidatewithlogin/get
-func (tmdb *TMDb) GetAuthValidateToken(token, user, password string) (*AuthenticationToken, error) {
+func (tmdb *TMDb) GetAuthValidateToken(ctx context.Context, token, user, password string) (*AuthenticationToken, error) {
 	var validToken AuthenticationToken
 	uri := fmt.Sprintf("%s/authentication/token/validate_with_login?api_key=%s&request_token=%s&username=%s&password=%s", baseURL, tmdb.apiKey, token, user, password)
-	result, err := getTmdb(uri, &validToken)
+	result, err := getTmdb(ctx, uri, &validToken)
 	return result.(*AuthenticationToken), err
 }
 
 // GetAuthSession generates a session id for user based authentication
 // http://docs.themoviedb.apiary.io/#reference/authentication/authenticationsessionnew/get
-func (tmdb *TMDb) GetAuthSession(token string) (*AuthenticationSession, error) {
+func (tmdb *TMDb) GetAuthSession(ctx context.Context, token string) (*AuthenticationSession, error) {
 	var session AuthenticationSession
 	uri := fmt.Sprintf("%s/authentication/session/new?api_key=%s&request_token=%s", baseURL, tmdb.apiKey, token)
-	result, err := getTmdb(uri, &session)
+	result, err := getTmdb(ctx, uri, &session)
 	return result.(*AuthenticationSession), err
 }
 
 // GetAuthGuestSession generates a valid request token for user based authentication
 // http://docs.themoviedb.apiary.io/#reference/authentication/authenticationguestsessionnew/get
-func (tmdb *TMDb) GetAuthGuestSession() (*AuthenticationGuestSession, error) {
+func (tmdb *TMDb) GetAuthGuestSession(ctx context.Context) (*AuthenticationGuestSession, error) {
 	var session AuthenticationGuestSession
 	uri := fmt.Sprintf("%s/authentication/guest_session/new?api_key=%s", baseURL, tmdb.apiKey)
-	result, err := getTmdb(uri, &session)
+	result, err := getTmdb(ctx, uri, &session)
 	return result.(*AuthenticationGuestSession), err
 }

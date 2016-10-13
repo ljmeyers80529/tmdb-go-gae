@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // Certification struct
@@ -15,18 +16,18 @@ type Certification struct {
 
 // GetCertificationsMovieList for movies
 // http://docs.themoviedb.apiary.io/#reference/certifications/certificationmovielist/get
-func (tmdb *TMDb) GetCertificationsMovieList() (*Certification, error) {
+func (tmdb *TMDb) GetCertificationsMovieList(ctx context.Context) (*Certification, error) {
 	var movieCert Certification
 	uri := fmt.Sprintf("%s/certification/movie/list?api_key=%s", baseURL, tmdb.apiKey)
-	result, err := getTmdb(uri, &movieCert)
+	result, err := getTmdb(ctx, uri, &movieCert)
 	return result.(*Certification), err
 }
 
 // GetCertificationsTvList for tv shows
 // http://docs.themoviedb.apiary.io/#reference/certifications/certificationtvlist/get
-func (tmdb *TMDb) GetCertificationsTvList() (*Certification, error) {
+func (tmdb *TMDb) GetCertificationsTvList(ctx context.Context) (*Certification, error) {
 	var tvCert Certification
 	uri := fmt.Sprintf("%s/certification/tv/list?api_key=%s", baseURL, tmdb.apiKey)
-	result, err := getTmdb(uri, &tvCert)
+	result, err := getTmdb(ctx, uri, &tvCert)
 	return result.(*Certification), err
 }

@@ -2,11 +2,12 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // DiscoverMovie discovers movies by different types of data like average rating, number of votes, genres and certifications
 // http://docs.themoviedb.apiary.io/#reference/discover/discovermovie/get
-func (tmdb *TMDb) DiscoverMovie(options map[string]string) (*MoviePagedResults, error) {
+func (tmdb *TMDb) DiscoverMovie(ctx context.Context, options map[string]string) (*MoviePagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"certification_country":    {},
 		"certification":            {},
@@ -35,13 +36,13 @@ func (tmdb *TMDb) DiscoverMovie(options map[string]string) (*MoviePagedResults, 
 	optionsString := getOptionsString(options, availableOptions)
 	var results MoviePagedResults
 	uri := fmt.Sprintf("%s/discover/movie?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &results)
+	result, err := getTmdb(ctx, uri, &results)
 	return result.(*MoviePagedResults), err
 }
 
 // DiscoverTV discovers TV shows by different types of data like average rating, number of votes, genres, the network they aired on and air dates
 // http://docs.themoviedb.apiary.io/#reference/discover/discovertv/get
-func (tmdb *TMDb) DiscoverTV(options map[string]string) (*TvPagedResults, error) {
+func (tmdb *TMDb) DiscoverTV(ctx context.Context, options map[string]string) (*TvPagedResults, error) {
 	var availableOptions = map[string]struct{}{
 		"page":                {},
 		"language":            {},
@@ -56,6 +57,6 @@ func (tmdb *TMDb) DiscoverTV(options map[string]string) (*TvPagedResults, error)
 	optionsString := getOptionsString(options, availableOptions)
 	var results TvPagedResults
 	uri := fmt.Sprintf("%s/discover/tv?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &results)
+	result, err := getTmdb(ctx, uri, &results)
 	return result.(*TvPagedResults), err
 }

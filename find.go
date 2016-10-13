@@ -2,6 +2,7 @@ package tmdbgae
 
 import (
 	"fmt"
+	"golang.org/x/net/context"
 )
 
 // FindResults struct
@@ -31,12 +32,12 @@ type FindResults struct {
 
 // GetFind makes it easy to search for objects in our database by an external id
 // http://docs.themoviedb.apiary.io/#reference/find/findid/get
-func (tmdb *TMDb) GetFind(id, source string, options map[string]string) (*FindResults, error) {
+func (tmdb *TMDb) GetFind(ctx context.Context, id, source string, options map[string]string) (*FindResults, error) {
 	var availableOptions = map[string]struct{}{
 		"language": {}}
 	var results FindResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/find/%s?api_key=%s&external_source=%s%s", baseURL, id, tmdb.apiKey, source, optionsString)
-	result, err := getTmdb(uri, &results)
+	result, err := getTmdb(ctx, uri, &results)
 	return result.(*FindResults), err
 }

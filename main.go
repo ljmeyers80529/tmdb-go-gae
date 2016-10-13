@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"strconv"
 	"sync"
 	"time"
@@ -42,7 +41,7 @@ func ToJSON(payload interface{}) (string, error) {
 	return string(jsonRes), err
 }
 
-func getTmdbGAE(ctx context.Context, url string, payload interface{}) (interface{}, error) {
+func getTmdb(ctx context.Context, url string, payload interface{}) (interface{}, error) {
 	// Go single-threaded so we can deal with the rate limit
 	requestMutex.Lock()
 	defer requestMutex.Unlock()
@@ -55,50 +54,6 @@ func getTmdbGAE(ctx context.Context, url string, payload interface{}) (interface
 
 	client := urlfetch.Client(ctx)
 	res, err := client.Get(url)
-	if res.Header.Get(`x-ratelimit-remaining`) == `0` { // Out of requests for this period
-		reset := res.Header.Get(`x-ratelimit-reset`)
-		iReset, err := strconv.ParseInt(reset, 10, 64)
-		if err == nil {
-			// Set the reset time here, the next request will trip it
-			rateLimitReset = time.Unix(iReset+1, 0)
-		}
-	}
-
-	if err != nil { // HTTP connection error
-		return payload, err
-	}
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil { // Failed to read body
-		return payload, err
-	}
-
-	if res.StatusCode >= 200 && res.StatusCode < 300 { // Success!
-		json.Unmarshal(body, &payload)
-		return payload, nil
-	}
-
-	// Handle failure modes
-	var status apiStatus
-	err = json.Unmarshal(body, &status)
-	if err != nil {
-		return payload, err
-	}
-	return payload, fmt.Errorf("Code (%d): %s", status.Code, status.Message)
-}
-
-func getTmdb(url string, payload interface{}) (interface{}, error) {
-	// Go single-threaded so we can deal with the rate limit
-	requestMutex.Lock()
-	defer requestMutex.Unlock()
-
-	now := time.Now()
-	if rateLimitReset.After(now) { // We have a reset time in the future, so we're out of requests
-		// Wait for rate limiter to be reset
-		<-time.After(rateLimitReset.Sub(now))
-	}
-
-	res, err := http.Get(url)
 	if res.Header.Get(`x-ratelimit-remaining`) == `0` { // Out of requests for this period
 		reset := res.Header.Get(`x-ratelimit-reset`)
 		iReset, err := strconv.ParseInt(reset, 10, 64)
